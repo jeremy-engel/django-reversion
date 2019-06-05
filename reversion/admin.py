@@ -242,7 +242,9 @@ class VersionAdmin(admin.ModelAdmin):
             raise PermissionDenied
         model = self.model
         opts = model._meta
-        deleted = self._reversion_order_version_queryset(Version.objects.get_deleted(self.model))
+        deleted = self._reversion_order_version_queryset(
+            Version.objects.get_deleted(self.model).prefetch_related('revision')
+        )
         # Set the app name.
         request.current_app = self.admin_site.name
         # Get the rest of the context.
